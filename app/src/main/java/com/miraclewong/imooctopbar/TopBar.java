@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -31,12 +32,23 @@ public class TopBar extends RelativeLayout{
     private int titleTextColor;
     private String titleText;
 
+    public topbarClickListener listener;
+
+    public interface topbarClickListener{
+        public void leftClick();
+        public void rightClick();
+    }
+
+    public void setOnTopBarClickListener(topbarClickListener listener){
+        this.listener = listener;                   //映射过来
+    }
+
     // 布局参数
     private LayoutParams leftParams;
     private LayoutParams rightParams;
     private LayoutParams titleParams;
 
-    public TopBar(Context context, AttributeSet attrs) {
+    public TopBar(final Context context, AttributeSet attrs) {
         super(context, attrs);
 
         //获取定义的所有值的映射
@@ -88,5 +100,29 @@ public class TopBar extends RelativeLayout{
         titleParams.addRule(RelativeLayout.CENTER_IN_PARENT, TRUE);
         addView(tvTitle,titleParams);
 
+        leftButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(context,"IMooc Left",Toast.LENGTH_SHORT).show();
+                listener.leftClick();
+            }
+
+        });
+
+        rightButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(context,"IMooc Right",Toast.LENGTH_SHORT).show();
+                listener.rightClick();
+            }
+        });
+    }
+
+    public void setLeftIsVisable(boolean flag){
+        if (flag){
+            leftButton.setVisibility(View.VISIBLE);
+        } else {
+            leftButton.setVisibility(View.GONE);
+        }
     }
 }
